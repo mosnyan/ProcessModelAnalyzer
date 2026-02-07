@@ -37,11 +37,10 @@ module ProcessModelAnalyzer
         refined_problem = OptimizationProblem(refined_function, black_box_solution.minimizer, data; lb=lower_bounds, ub=upper_bounds)
         results = solve(refined_problem, BFGS())
 
-        residual_error = loss_function(results.u, data)
         strategy = recommend_strategy(results.u[2], results.u[3])
 
         return (
-            residual_error = residual_error,
+            residual_error = results.objective,
             kp = results.u[1],
             τ = results.u[2],
             θ = results.u[3],
@@ -56,7 +55,7 @@ module ProcessModelAnalyzer
     """
     function first_order!(dy, y, p, t)
         u_delayed = t < p.θ ? p.bias_u : p.interpolated_u(t - p.θ)
-        dy[1] = (-(y[1] - p.bias_y) + p.kp * (u_delayed - p.bias_u)) / p.τ
+        dy[1] = (p.kp * (u_delayed - p.bias_u) -(y[1] - p.bias_y)) / p.τ
     end
 
     """
@@ -144,3 +143,5 @@ module ProcessModelAnalyzer
     end
 
 end # module ProcessModelAnalyzer
+
+ProcessModelAnalyzer.optimize_model("/data/prog/julia/ProcessModelAnalyzer/data/test_data.csv")
