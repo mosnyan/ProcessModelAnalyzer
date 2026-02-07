@@ -144,5 +144,3 @@ module ProcessModelAnalyzer
     end
 
 end # module ProcessModelAnalyzer
-
-ProcessModelAnalyzer.optimize_model("/data/prog/julia/ProcessModelAnalyzer/data/test_data.csv")
