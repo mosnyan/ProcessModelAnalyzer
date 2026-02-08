@@ -65,7 +65,7 @@ module ProcessModelAnalyzer
     """
     function generate_model(diff_function!, p)
         ode_problem = ODEProblem(diff_function!, [p.bias_y], p.t_span, p)
-        return solve(ode_problem; abstol=10e-9, reltol=10e-9)
+        return solve(ode_problem; abstol=10e-6, reltol=10e-6)
     end
 
     """
