@@ -79,7 +79,7 @@ module ProcessModelAnalyzer
             return sum((model_y .- data.sampled_y) .^ 2)
         end
 
-        return Inf
+        error("DiffEq solver has failed with code" + model.retcode)
     end
 
     """
@@ -143,3 +143,5 @@ module ProcessModelAnalyzer
     end
 
 end # module ProcessModelAnalyzer
+
+ProcessModelAnalyzer.optimize_model("/data/prog/julia/ProcessModelAnalyzer/data/test_data.csv")
