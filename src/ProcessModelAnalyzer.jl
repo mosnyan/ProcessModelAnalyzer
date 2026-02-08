@@ -55,7 +55,7 @@ module ProcessModelAnalyzer
     """
     function first_order!(dy, y, p, t)
         u_delayed = t < p.θ ? p.bias_u : p.interpolated_u(t - p.θ)
-        dy[1] = (p.kp * (u_delayed - p.bias_u) -(y[1] - p.bias_y)) / p.τ
+        dy[1] = (p.kp * (u_delayed - p.bias_u) - (y[1] - p.bias_y)) / p.τ
     end
 
     """
@@ -79,7 +79,7 @@ module ProcessModelAnalyzer
             return sum((model_y .- data.sampled_y) .^ 2)
         end
 
-        error("DiffEq solver has failed with code" + model.retcode)
+        error("DiffEq solver has failed with code " * model.retcode)
     end
 
     """
@@ -131,17 +131,13 @@ module ProcessModelAnalyzer
 
         if 1 >= ratio
             return Advanced
-        elseif 1 < ratio && ratio <= 2
+        elseif 1 < ratio
             return PID
-        elseif 2 < ratio && ratio <= 5
+        elseif 2 < ratio
             return PI
-        elseif 5 < ratio && ratio <= 10
-            return P
         else
-            return BangBang
+            return P
         end
     end
 
 end # module ProcessModelAnalyzer
-
-ProcessModelAnalyzer.optimize_model("/data/prog/julia/ProcessModelAnalyzer/data/test_data.csv")
